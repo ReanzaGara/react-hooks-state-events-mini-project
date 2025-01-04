@@ -1,38 +1,25 @@
 import React, { useState } from "react";
 
-function CategoryFilter({ categories, handleFilterTask }) {
-  const [categoryList, setCategoryList] = useState(categories.map(category => {
-      return {
-        category: category,
-        class: ''
-      }
-    }))
+function CategoryFilter({ categories, changeFilter }) {
+  const [selectedCategory, setSelectedCategory] = useState("All");
 
-  const handleFilter = (category) => {
-    setCategoryList(categoryList.map(item => {
-      if(item.category === category){
-        return {
-          ...item,
-          class: 'selected'
-        }
-      } else {
-        return {
-          ...item,
-          class: ''
-        }
-      }
-    }))
-    handleFilterTask(category)
+  function changeCategory(category) {
+    changeFilter(category);
+    setSelectedCategory(category);
   }
-  
+
   return (
     <div className="categories">
       <h5>Category filters</h5>
-      {categoryList.map((item, index) => { 
-        return(
-          <button key={index} className={item.class} onClick={() => handleFilter(item.category)} >{item.category}</button>
-        )
-      })}
+      {categories.map((category) => (
+        <button
+          key={category}
+          className={selectedCategory === category ? "selected" : ""}
+          onClick={() => changeCategory(category)}
+        >
+          {category}
+        </button>
+      ))}
     </div>
   );
 }
