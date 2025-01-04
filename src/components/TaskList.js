@@ -1,14 +1,17 @@
 import React from "react";
 import Task from "./Task";
-function TaskList({tasks,handleDelete}) {
-  const mappedTasks = tasks.map((item,index)=>{
-    return(
-      <Task key={index} id={index} text = {item.text} category = {item.category} handleDelete={handleDelete}/>
-    )
-  })
+
+function TaskList({tasks, deletedItem}) {
   return (
     <div className="tasks">
-      {mappedTasks}
+      {tasks.map((task, index)=>(
+        <Task
+          deletedItem={deletedItem}
+          key={index}
+          text={task.text}
+          category={task.category}
+        />
+      ))}
     </div>
   );
 }
