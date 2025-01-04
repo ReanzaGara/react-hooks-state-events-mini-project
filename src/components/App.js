@@ -4,31 +4,51 @@ import NewTaskForm from "./NewTaskForm";
 import TaskList from "./TaskList";
 
 import { CATEGORIES, TASKS } from "../data";
+console.log("Here's the data you're working with");
+console.log({ CATEGORIES, TASKS });
 
 function App() {
-  const [tasks, setTasks] = useState(TASKS);
-  const [filter, setFilter] = useState("All");
-
-  function changeFilter(category) {
-    setFilter(category);
-  }
-
-  function handleTaskFormSubmit(newTask) {
-    setTasks([...tasks, newTask]);
+  //Lifts state from Tasklist
+  const[tasks, setTasks] = useState(TASKS);//set state for task list in APP
+  const[selectedCategory, setSelectedCategory] = useState ("All")//set state for category list in App
+ 
+  //
+  const handleSelectCategory = (category)=>{
+  setSelectedCategory(category);
   }
   
-  const filteredTasks = tasks.filter((task) => (
-    filter === "All" ? true : task.category === filter
-  ))
+
+  const handleAddNewTask = (newTask)=>{
+    setTasks(currentTask=>[...currentTask, newTask]);
+    
+  };
+
+  //
+  const updateTasks = (updatedTasks)=> {setTasks(updatedTasks)}
+
+  //filtered tasks based on click event in CategoryFilter
+  const filteredTasks = selectedCategory === "All"
+  ? tasks : tasks.filter(task=> task.category === selectedCategory)
+
 
   return (
     <div className="App">
       <h2>My tasks</h2>
-      <CategoryFilter categories={CATEGORIES} changeFilter={changeFilter} />
-      <NewTaskForm categories={CATEGORIES} onTaskFormSubmit={handleTaskFormSubmit}/>
-      <TaskList tasks={filteredTasks} />
+      <CategoryFilter 
+      selectedCategory= {selectedCategory} 
+      categories = {CATEGORIES}
+      onSelectCategory = {handleSelectCategory} 
+      />
+      <NewTaskForm 
+      categories = {CATEGORIES}
+      onTaskFormSubmit={handleAddNewTask}
+      />
+      <TaskList 
+      tasks = {filteredTasks} 
+      updateTasks={updateTasks}
+      />
     </div>
   );
-}
+  }
 
 export default App;
