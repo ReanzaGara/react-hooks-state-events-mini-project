@@ -1,48 +1,80 @@
-import React,{useState} from "react";
-import CategoryFilter from "./CategoryFilter";
-import NewTaskForm from "./NewTaskForm";
-import TaskList from "./TaskList";
-import { CATEGORIES, TASKS } from "../data";
+import React, { useState } from 'react';
+import CategoryFilter from './CategoryFilter';
+import NewTaskForm from './NewTaskForm';
+import TaskList from './TaskList';
+
+import { CATEGORIES, TASKS } from '../data';
 
 function App() {
-  const [task, setTask] = useState(TASKS)
-  const [categories, setCategories] = useState(CATEGORIES)
-  const [selectedCategoryButton, setSelectedCategoryButton] = useState('All')
-  
-  function addNewItemtoList(newItem){
-    setTask([...task,newItem])
-  }
+	const [taskList, setTaskList] = useState(
+		TASKS.map((task) => {
+			return {
+				text: task.text,
+				category: task.category,
+				display: true,
+			};
+		}),
+	);
 
-  function deletedItem(deletedItem){
-    setTask(task.filter((item)=>item.text !== deletedItem))
-  }
+	const handleDeleteTask = (taskToDelete) => {
+		setTaskList(taskList.filter((task) => task.text !== taskToDelete));
+	};
 
-  const itemDisplayed = task
+	const handleFilterTask = (category) => {
+		if (category === 'All') {
+			setTaskList(
+				taskList.map((task) => {
+					return {
+						...task,
+						display: true,
+					};
+				}),
+			);
+		} else {
+			setTaskList(
+				taskList.map((task) => {
+					if (task.category === category) {
+						return {
+							...task,
+							display: true,
+						};
+					} else {
+						return {
+							...task,
+							display: false,
+						};
+					}
+				}),
+			);
+		}
+	};
 
-  .filter(
-    (item)=>{ 
-    if(selectedCategoryButton==='All') return true
-    return selectedCategoryButton === item.category
-   } 
-   )
-   
-  return (
-    <div className="App">
-      <h2>My tasks</h2>
-      <CategoryFilter
-        categories={categories}
-        onButton={selectedCategoryButton}
-        selectedButton={setSelectedCategoryButton} 
-      />
-      <NewTaskForm
-        onTaskFormSubmit={addNewItemtoList}
-        categories={categories}
-      />
-      <TaskList 
-        deletedItem={deletedItem}
-        tasks={itemDisplayed} />
-    </div>
-  );
+	const onTaskFormSubmit = (newTask) => {
+		console.log(newTask);
+		setTaskList([
+			...taskList,
+			{
+				text: newTask.text,
+				category: newTask.category,
+				display: true,
+			},
+		]);
+	};
+
+	return (
+		<div className="App">
+			<h2>My tasks</h2>
+			<CategoryFilter
+				categories={CATEGORIES}
+				handleFilterTask={handleFilterTask}
+			/>
+			<NewTaskForm
+				categories={CATEGORIES}
+				onTaskFormSubmit={onTaskFormSubmit}
+			/>
+			<TaskList tasks={taskList} handleDeleteTask={handleDeleteTask} />
+		</div>
+	);
 }
 
 export default App;
