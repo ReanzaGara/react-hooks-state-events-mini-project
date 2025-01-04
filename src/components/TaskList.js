@@ -1,24 +1,16 @@
-import React from 'react';
-import Task from './Task';
-
-function TaskList({ tasks, handleDeleteTask }) {
-	return (
-		<div className="tasks">
-			{tasks.map((task, index) => {
-				if (task.display === true || task.display === undefined) {
-					return (
-						<Task
-							key={index}
-							text={task.text}
-							category={task.category}
-							handleDeleteTask={handleDeleteTask}
-						/>
-					);
-				}
-				return <div> </div>;
-			})}
-		</div>
-	);
+import React from "react";
+import Task from "./Task";
+function TaskList({tasks,handleDelete}) {
+  const mappedTasks = tasks.map((item,index)=>{
+    return(
+      <Task key={index} id={index} text = {item.text} category = {item.category} handleDelete={handleDelete}/>
+    )
+  })
+  return (
+    <div className="tasks">
+      {mappedTasks}
+    </div>
+  );
 }
 
 export default TaskList;
